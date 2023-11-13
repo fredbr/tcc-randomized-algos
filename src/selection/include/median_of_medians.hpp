@@ -2,7 +2,6 @@
 #include <algorithm>
 
 struct MedianOfMedians {
-
     template<typename Iter>
     inline void unchecked_insert(Iter it) {
         while (*it < *std::prev(it)) {
@@ -13,8 +12,8 @@ struct MedianOfMedians {
 
     template<typename Iter>
     Iter sort5(Iter beg, Iter end) {
-        auto smallest = std::min_element(beg, end);
-        std::iter_swap(beg, smallest);
+        auto minimum = std::min_element(beg, end);
+        std::iter_swap(beg, minimum);
         for (auto it = beg+1; it != end; ++it) {
             unchecked_insert(it);
         }
@@ -37,15 +36,16 @@ struct MedianOfMedians {
 
         return select(beg, next_median, std::distance(beg, next_median) / 2);
     }
+
     template<typename Iter>
     Iter select(Iter beg, Iter end, ptrdiff_t k) {
-        if (end - beg <= 1) return beg + (k != 0);
+        if (end - beg <= 1) return beg;
 
         auto pivot_val = *pivot(beg, end);
 
         auto less_split = std::partition(beg, end, [pivot_val] (auto&& val) { return val < pivot_val; });
         auto more_split = std::partition(less_split, end, [pivot_val] (auto&& val) { return val <= pivot_val; });
-
+        
         ptrdiff_t less_amt = less_split - beg;
         ptrdiff_t equal_amt = more_split - less_split;
 
